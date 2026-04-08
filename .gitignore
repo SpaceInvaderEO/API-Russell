@@ -1,13 +1,1 @@
-# TODO
 TODO_Russell_API.md
-
-# IDE - VS Code
-.vscode/
-*.code-workspace
-
-# Windows
-Thumbs.db
-Desktop.ini
-
-# Logs
-*.log
