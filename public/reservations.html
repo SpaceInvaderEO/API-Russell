@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russell Marina | Réservations</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav">
+        <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
+            <a href="dashboard.html" class="logo">⚓ Russell Marina</a>
+            <button id="logoutBtn" class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto; font-size: 0.75rem;">Déconnexion</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="navbar-links" style="flex-direction: column;">
+                <a href="dashboard.html" class="nav-link">Tableau de bord</a>
+                <a href="catways.html" class="nav-link">Gestion des Catways</a>
+                <a href="reservations.html" class="nav-link" style="color: var(--primary);">Réservations</a>
+                <a href="users.html" class="nav-link">Utilisateurs</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Gestion des Réservations</h2>
+                <button onclick="showModal()" class="btn btn-primary" style="width: auto;">+ Nouvelle Réservation</button>
+            </div>
+
+            <div class="table-container">
+                <table id="resTable">
+                    <thead>
+                        <tr>
+                            <th>Catway</th>
+                            <th>Client</th>
+                            <th>Bateau</th>
+                            <th>Arrivée</th>
+                            <th>Départ</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+        <div class="card" style="max-width: 500px;">
+            <h3>Ajouter une Réservation</h3>
+            <form id="resForm" style="margin-top: 1.5rem;">
+                <div class="form-group">
+                    <label>Numéro du Catway</label>
+                    <input type="number" id="catwayNumber" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom du Client</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom du Bateau</label>
+                    <input type="text" id="boatName" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Début</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Fin</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" onclick="hideModal()" class="btn" style="background:#e2e8f0;">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'index.html';
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        });
+
+        async function fetchReservations() {
+            const res = await fetch('/reservations', { headers: { 'Authorization': `Bearer ${token}` } });
+            const data = await res.json();
+            const tbody = document.querySelector('#resTable tbody');
+            tbody.innerHTML = data.map(r => `
+                <tr>
+                    <td><span class="badge badge-blue">#${r.catwayNumber}</span></td>
+                    <td>${r.clientName}</td>
+                    <td>${r.boatName}</td>
+                    <td>${new Date(r.startDate).toLocaleDateString()}</td>
+                    <td>${new Date(r.endDate).toLocaleDateString()}</td>
+                    <td>
+                        <button onclick="deleteRes('${r.catwayNumber}', '${r._id}')" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:600;">Supprimer</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showModal() {
+            document.getElementById('resForm').reset();
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function hideModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        async function deleteRes(catwayId, resId) {
+            if (confirm('Supprimer cette réservation ?')) {
+                await fetch(`/catways/${catwayId}/reservations/${resId}`, { 
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                fetchReservations();
+            }
+        }
+
+        document.getElementById('resForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const catwayId = document.getElementById('catwayNumber').value;
+            const body = {
+                clientName: document.getElementById('clientName').value,
+                boatName: document.getElementById('boatName').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value
+            };
+
+            const res = await fetch(`/catways/${catwayId}/reservations`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (res.ok) {
+                hideModal();
+                fetchReservations();
+            } else {
+                alert('Erreur lors de la création');
+            }
+        });
+
+        fetchReservations();
+    </script>
+</body>
+</html>

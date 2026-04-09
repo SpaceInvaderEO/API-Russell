@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russell Marina | Catways</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav">
+        <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
+            <a href="dashboard.html" class="logo">⚓ Russell Marina</a>
+            <button id="logoutBtn" class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto; font-size: 0.75rem;">Déconnexion</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="navbar-links" style="flex-direction: column;">
+                <a href="dashboard.html" class="nav-link">Tableau de bord</a>
+                <a href="catways.html" class="nav-link" style="color: var(--primary);">Gestion des Catways</a>
+                <a href="reservations.html" class="nav-link">Réservations</a>
+                <a href="users.html" class="nav-link">Utilisateurs</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Gestion des Catways</h2>
+                <button onclick="showModal()" class="btn btn-primary" style="width: auto;">+ Nouveau Catway</button>
+            </div>
+
+            <div class="table-container">
+                <table id="catwayTable">
+                    <thead>
+                        <tr>
+                            <th>Numéro</th>
+                            <th>Type</th>
+                            <th>État</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+        <div class="card" style="max-width: 500px;">
+            <h3 id="modalTitle" style="margin-bottom: 1.5rem;">Ajouter un Catway</h3>
+            <form id="catwayForm">
+                <div class="form-group">
+                    <label>Numéro</label>
+                    <input type="number" id="catwayNumber" required>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="catwayType" style="width:100%; padding:0.75rem; border-radius:0.75rem; border:1px solid #e2e8f0;">
+                        <option value="short">Court</option>
+                        <option value="long">Long</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>État</label>
+                    <input type="text" id="catwayState" required placeholder="Ex: Bon état">
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" onclick="hideModal()" class="btn" style="background:#e2e8f0;">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'index.html';
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        });
+
+        async function fetchCatways() {
+            const res = await fetch('/catways', { headers: { 'Authorization': `Bearer ${token}` } });
+            const catways = await res.json();
+            const tbody = document.querySelector('#catwayTable tbody');
+            tbody.innerHTML = catways.map(c => `
+                <tr>
+                    <td><span class="badge badge-blue">#${c.catwayNumber}</span></td>
+                    <td>${c.catwayType === 'long' ? 'Ponton Long' : 'Ponton Court'}</td>
+                    <td>${c.catwayState}</td>
+                    <td>
+                        <button onclick="editCatway(${c.catwayNumber}, '${c.catwayState}')" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600; margin-right:1rem;">Détails/Éditer</button>
+                        <button onclick="deleteCatway(${c.catwayNumber})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:600;">Supprimer</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showModal() {
+            document.getElementById('catwayForm').reset();
+            document.getElementById('catwayNumber').disabled = false;
+            document.getElementById('catwayType').disabled = false;
+            document.getElementById('modalTitle').textContent = 'Ajouter un Catway';
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function hideModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function editCatway(number, state) {
+            document.getElementById('catwayNumber').value = number;
+            document.getElementById('catwayNumber').disabled = true;
+            document.getElementById('catwayType').disabled = true;
+            document.getElementById('catwayState').value = state;
+            document.getElementById('modalTitle').textContent = 'Modifier l\'État du Catway #' + number;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        async function deleteCatway(number) {
+            if (confirm('Supprimer ce catway ?')) {
+                await fetch('/catways/' + number, { 
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                fetchCatways();
+            }
+        }
+
+        document.getElementById('catwayForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const number = document.getElementById('catwayNumber').value;
+            const type = document.getElementById('catwayType').value;
+            const state = document.getElementById('catwayState').value;
+            const isEdit = document.getElementById('catwayNumber').disabled;
+
+            const url = isEdit ? '/catways/' + number : '/catways';
+            const method = isEdit ? 'PUT' : 'POST';
+
+            await fetch(url, {
+                method: method,
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ catwayNumber: number, catwayType: type, catwayState: state })
+            });
+
+            hideModal();
+            fetchCatways();
+        });
+
+        fetchCatways();
+    </script>
+</body>
+</html>

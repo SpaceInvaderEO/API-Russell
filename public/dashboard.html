@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russell Marina | Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav">
+        <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
+            <a href="dashboard.html" class="logo">⚓ Russell Marina</a>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <span id="userDisplay" style="font-size: 0.875rem; font-weight: 600;"></span>
+                <span id="dateDisplay" style="font-size: 0.875rem; color: var(--secondary);"></span>
+                <button id="logoutBtn" class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto; font-size: 0.75rem;">Déconnexion</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="navbar-links" style="flex-direction: column;">
+                <a href="dashboard.html" class="nav-link" style="color: var(--primary);">Tableau de bord</a>
+                <a href="catways.html" class="nav-link">Gestion des Catways</a>
+                <a href="reservations.html" class="nav-link">Réservations</a>
+                <a href="users.html" class="nav-link">Utilisateurs</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <h2 style="margin-bottom: 2rem;">Vue d'ensemble</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p style="font-size: 0.875rem; color: var(--secondary);">Catways</p>
+                    <h3 id="catwayCount" style="font-size: 1.5rem;">--</h3>
+                </div>
+                <div class="stat-card">
+                    <p style="font-size: 0.875rem; color: var(--secondary);">Réservations</p>
+                    <h3 id="resCount" style="font-size: 1.5rem;">--</h3>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div style="padding: 1.5rem; border-bottom: 1px solid #f1f5f9;">
+                    <h3 style="font-size: 1rem;">Réservations en cours</h3>
+                </div>
+                <table id="resTable">
+                    <thead>
+                        <tr>
+                            <th>Catway</th>
+                            <th>Client</th>
+                            <th>Bateau</th>
+                            <th>Début</th>
+                            <th>Fin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const userData = JSON.parse(localStorage.getItem('user'));
+
+        if (!token) window.location.href = 'index.html';
+
+        document.getElementById('userDisplay').textContent = userData.username;
+        document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        });
+
+        async function fetchData() {
+            try {
+                const [catwaysRes, reservationsRes] = await Promise.all([
+                    fetch('/catways', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('/reservations', { headers: { 'Authorization': `Bearer ${token}` } })
+                ]);
+
+                if (!catwaysRes.ok || !reservationsRes.ok) throw new Error('Failed to fetch');
+
+                const catways = await catwaysRes.json();
+                const reservations = await reservationsRes.json();
+
+                document.getElementById('catwayCount').textContent = catways.length;
+                document.getElementById('resCount').textContent = reservations.length;
+
+                const tbody = document.querySelector('#resTable tbody');
+                tbody.innerHTML = reservations.map(r => `
+                    <tr>
+                        <td><span class="badge badge-blue">#${r.catwayNumber}</span></td>
+                        <td>${r.clientName}</td>
+                        <td>${r.boatName}</td>
+                        <td>${new Date(r.startDate).toLocaleDateString()}</td>
+                        <td>${new Date(r.endDate).toLocaleDateString()}</td>
+                    </tr>
+                `).join('');
+
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
