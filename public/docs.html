@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russell Marina | Documentation API</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        code { background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
+        pre { background: #1e293b; color: #f8fafc; padding: 1.5rem; border-radius: 1rem; overflow-x: auto; margin: 1rem 0; font-size: 0.875rem; }
+        .endpoint { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid #e2e8f0; }
+        .method { padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.75rem; margin-right: 0.5rem; color: white; }
+        .get { background: #22c55e; }
+        .post { background: #3b82f6; }
+        .put { background: #f59e0b; }
+        .delete { background: #ef4444; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
+            <a href="dashboard.html" class="logo">⚓ Russell Marina</a>
+            <a href="dashboard.html" class="nav-link">Retour au Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 8rem; padding-bottom: 5rem;">
+        <header style="margin-bottom: 4rem;">
+            <h1>Documentation API</h1>
+            <p class="subtitle">Référentiel technique des points d'entrée de l'API Russell Marina</p>
+        </header>
+
+        <section class="endpoint">
+            <h2> Authentification</h2>
+            <div style="margin-top: 1.5rem;">
+                <p><span class="method post">POST</span> <code>/login</code></p>
+                <p style="margin: 1rem 0;">Exemple de requête :</p>
+                <pre>{
+  "email": "admin@russell.com",
+  "password": "admin123"
+}</pre>
+            </div>
+        </section>
+
+        <section class="endpoint">
+            <h2> Catways</h2>
+            <div style="margin-top: 1.5rem;">
+                <p><span class="method get">GET</span> <code>/catways</code> - Lister tous les catways</p>
+                <p><span class="method get">GET</span> <code>/catways/:id</code> - Voir un catway spécifique</p>
+                <p><span class="method post">POST</span> <code>/catways</code> - Créer un catway</p>
+                <pre>{
+  "catwayNumber": 42,
+  "catwayType": "long",
+  "catwayState": "Neuf"
+}</pre>
+                <p><span class="method put">PUT</span> <code>/catways/:id</code> - Modifier l'état (uniquement)</p>
+                <p><span class="method delete">DELETE</span> <code>/catways/:id</code> - Supprimer un catway</p>
+            </div>
+        </section>
+
+        <section class="endpoint">
+            <h2> Réservations</h2>
+            <div style="margin-top: 1.5rem;">
+                <p><span class="method get">GET</span> <code>/reservations</code> - Toutes les réservations</p>
+                <p><span class="method post">POST</span> <code>/catways/:id/reservations</code> - Créer une réservation</p>
+                <pre>{
+  "clientName": "Alice",
+  "boatName": "Liberté",
+  "startDate": "2024-10-01",
+  "endDate": "2024-10-15"
+}</pre>
+                <p><span class="method delete">DELETE</span> <code>/catways/:id/reservations/:idReservation</code> - Supprimer</p>
+            </div>
+        </section>
+
+        <section class="endpoint">
+            <h2> Utilisateurs</h2>
+            <div style="margin-top: 1.5rem;">
+                <p><span class="method get">GET</span> <code>/users</code> - Liste des administrateurs</p>
+                <p><span class="method post">POST</span> <code>/users</code> - Créer un administrateur</p>
+                <p><span class="method put">PUT</span> <code>/users/:email</code> - Modifier</p>
+                <p><span class="method delete">DELETE</span> <code>/users/:email</code> - Supprimer</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
