@@ -1,18 +1,17 @@
-const Reservation = require('../models/Reservation');
+const reservationService = require('../services/reservationService');
 
 exports.getAllReservations = async (req, res) => {
     try {
-        const reservations = await Reservation.find();
+        const reservations = await reservationService.getAllReservations();
         res.status(200).json(reservations);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
 
-
 exports.getReservationsByCatway = async (req, res) => {
     try {
-        const reservations = await Reservation.find({ catwayNumber: req.params.id });
+        const reservations = await reservationService.getReservationsByCatway(req.params.id);
         res.status(200).json(reservations);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -21,7 +20,7 @@ exports.getReservationsByCatway = async (req, res) => {
 
 exports.getReservationById = async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.idReservation);
+        const reservation = await reservationService.getReservationById(req.params.idReservation);
         if (!reservation) {
             return res.status(404).json({ message: 'Reservation not found' });
         }
@@ -32,16 +31,8 @@ exports.getReservationById = async (req, res) => {
 };
 
 exports.createReservation = async (req, res) => {
-    const reservation = new Reservation({
-        catwayNumber: req.params.id,
-        clientName: req.body.clientName,
-        boatName: req.body.boatName,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate
-    });
-
     try {
-        const newReservation = await reservation.save();
+        const newReservation = await reservationService.createReservation(req.params.id, req.body);
         res.status(201).json(newReservation);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -50,8 +41,8 @@ exports.createReservation = async (req, res) => {
 
 exports.deleteReservation = async (req, res) => {
     try {
-        const result = await Reservation.deleteOne({ _id: req.params.idReservation });
-        if (result.deletedCount === 0) {
+        const success = await reservationService.deleteReservation(req.params.idReservation);
+        if (!success) {
             return res.status(404).json({ message: 'Reservation not found' });
         }
         res.status(200).json({ message: 'Reservation deleted' });
