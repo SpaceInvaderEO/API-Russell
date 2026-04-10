@@ -50,3 +50,15 @@ exports.deleteReservation = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+exports.updateReservation = async (req, res) => {
+    try {
+        const updatedReservation = await reservationService.updateReservation(req.params.idReservation, req.body);
+        if (!updatedReservation) {
+            return res.status(404).json({ message: 'Reservation not found' });
+        }
+        res.status(200).json(updatedReservation);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};

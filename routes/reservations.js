@@ -6,6 +6,7 @@ const auth = require('../middlewares/auth');
 router.get('/', auth, reservationsController.getReservationsByCatway);
 router.get('/:idReservation', auth, reservationsController.getReservationById);
 router.post('/', auth, reservationsController.createReservation);
+router.put('/:idReservation', auth, reservationsController.updateReservation);
 router.delete('/:idReservation', auth, reservationsController.deleteReservation);
 
 module.exports = router;

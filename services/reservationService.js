@@ -27,3 +27,17 @@ exports.deleteReservation = async (idReservation) => {
     const result = await Reservation.deleteOne({ _id: idReservation });
     return result.deletedCount > 0;
 };
+
+exports.updateReservation = async (idReservation, updateData) => {
+    const reservation = await Reservation.findById(idReservation);
+    if (!reservation) {
+        return null;
+    }
+
+    if (updateData.clientName) reservation.clientName = updateData.clientName;
+    if (updateData.boatName) reservation.boatName = updateData.boatName;
+    if (updateData.startDate) reservation.startDate = updateData.startDate;
+    if (updateData.endDate) reservation.endDate = updateData.endDate;
+
+    return await reservation.save();
+};
