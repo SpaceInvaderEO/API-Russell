@@ -1,5 +1,11 @@
 const catwayService = require('../services/catwayService');
 
+/**
+ * Récupère la liste de tous les catways.
+ * 
+ * @param {Object} req - Objet de requête Express.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.getAllCatways = async (req, res) => {
     try {
         const catways = await catwayService.getAllCatways();
@@ -9,6 +15,12 @@ exports.getAllCatways = async (req, res) => {
     }
 };
 
+/**
+ * Récupère un catway spécifique par son identifiant (numéro).
+ * 
+ * @param {Object} req - Objet de requête Express contenant l'ID dans params.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.getCatwayById = async (req, res) => {
     try {
         const catway = await catwayService.getCatwayById(req.params.id);
@@ -21,6 +33,13 @@ exports.getCatwayById = async (req, res) => {
     }
 };
 
+/**
+ * Crée un nouveau catway.
+ * Valide la présence des champs obligatoires et le type de catway.
+ * 
+ * @param {Object} req - Objet de requête Express contenant les données du catway.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.createCatway = async (req, res) => {
     const { catwayNumber, catwayType, catwayState } = req.body;
  
@@ -43,6 +62,12 @@ exports.createCatway = async (req, res) => {
     }
 };
 
+/**
+ * Met à jour l'état d'un catway existant.
+ * 
+ * @param {Object} req - Objet de requête Express contenant l'ID et les données de mise à jour.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.updateCatway = async (req, res) => {
     try {
         const updatedCatway = await catwayService.updateCatway(req.params.id, req.body);
@@ -55,6 +80,12 @@ exports.updateCatway = async (req, res) => {
     }
 };
 
+/**
+ * Supprime un catway de la base de données.
+ * 
+ * @param {Object} req - Objet de requête Express contenant l'ID dans params.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.deleteCatway = async (req, res) => {
     try {
         const success = await catwayService.deleteCatway(req.params.id);

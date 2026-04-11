@@ -1,5 +1,12 @@
 const userService = require('../services/userService');
 
+/**
+ * Récupère la liste de tous les utilisateurs (administrateurs).
+ * Exclut les mots de passe de la réponse.
+ * 
+ * @param {Object} req - Objet de requête Express.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await userService.getAllUsers();
@@ -9,6 +16,12 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
+/**
+ * Récupère un utilisateur spécifique par son adresse email.
+ * 
+ * @param {Object} req - Objet de requête Express avec l'email dans params.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.getUserByEmail = async (req, res) => {
     try {
         const user = await userService.getUserByEmail(req.params.email);
@@ -21,6 +34,13 @@ exports.getUserByEmail = async (req, res) => {
     }
 };
 
+/**
+ * Crée un nouvel utilisateur administrateur.
+ * Valide la présence des champs et vérifie que l'email est unique.
+ * 
+ * @param {Object} req - Objet de requête Express contenant les infos utilisateur.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.createUser = async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -39,6 +59,12 @@ exports.createUser = async (req, res) => {
     }
 };
 
+/**
+ * Met à jour les informations d'un utilisateur existant.
+ * 
+ * @param {Object} req - Objet de requête Express avec l'email et les nouvelles données.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.updateUser = async (req, res) => {
     try {
         const updatedUser = await userService.updateUser(req.params.email, req.body);
@@ -51,6 +77,12 @@ exports.updateUser = async (req, res) => {
     }
 };
 
+/**
+ * Supprime un utilisateur de la base de données.
+ * 
+ * @param {Object} req - Objet de requête Express avec l'email dans params.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.deleteUser = async (req, res) => {
     try {
         const success = await userService.deleteUser(req.params.email);

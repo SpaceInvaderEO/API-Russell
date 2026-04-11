@@ -1,5 +1,14 @@
 const jwt = require('jsonwebtoken');
 
+/**
+ * Middleware d'authentification.
+ * Vérifie la présence et la validité d'un token JWT dans les headers ou les cookies.
+ * Redirige vers la page de connexion si la requête attend du HTML et échoue.
+ * 
+ * @param {Object} req - Objet de requête Express.
+ * @param {Object} res - Objet de réponse Express.
+ * @param {Function} next - Fonction suivante à appeler.
+ */
 module.exports = (req, res, next) => {
     try {
         let token = null;

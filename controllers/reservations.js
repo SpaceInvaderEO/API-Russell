@@ -1,5 +1,11 @@
 const reservationService = require('../services/reservationService');
 
+/**
+ * Récupère la liste de toutes les réservations du port.
+ * 
+ * @param {Object} req - Objet de requête Express.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.getAllReservations = async (req, res) => {
     try {
         const reservations = await reservationService.getAllReservations();
@@ -9,6 +15,12 @@ exports.getAllReservations = async (req, res) => {
     }
 };
 
+/**
+ * Récupère toutes les réservations d'un catway spécifique.
+ * 
+ * @param {Object} req - Objet de requête Express avec l'ID du catway dans params.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.getReservationsByCatway = async (req, res) => {
     try {
         const reservations = await reservationService.getReservationsByCatway(req.params.id);
@@ -18,6 +30,12 @@ exports.getReservationsByCatway = async (req, res) => {
     }
 };
 
+/**
+ * Récupère les détails d'une réservation spécifique.
+ * 
+ * @param {Object} req - Objet de requête Express avec l'identifiant de la réservation.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.getReservationById = async (req, res) => {
     try {
         const reservation = await reservationService.getReservationById(req.params.idReservation);
@@ -30,6 +48,13 @@ exports.getReservationById = async (req, res) => {
     }
 };
 
+/**
+ * Crée une nouvelle réservation pour un catway donné.
+ * Vérifie la présence des champs et la validité des dates (début < fin).
+ * 
+ * @param {Object} req - Objet de requête Express contenant les infos de réservation.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.createReservation = async (req, res) => {
     const { clientName, boatName, startDate, endDate } = req.body;
  
@@ -52,6 +77,12 @@ exports.createReservation = async (req, res) => {
     }
 };
 
+/**
+ * Supprime une réservation spécifique.
+ * 
+ * @param {Object} req - Objet de requête Express.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.deleteReservation = async (req, res) => {
     try {
         const success = await reservationService.deleteReservation(req.params.idReservation);
@@ -64,6 +95,12 @@ exports.deleteReservation = async (req, res) => {
     }
 };
 
+/**
+ * Met à jour les informations d'une réservation.
+ * 
+ * @param {Object} req - Objet de requête Express.
+ * @param {Object} res - Objet de réponse Express.
+ */
 exports.updateReservation = async (req, res) => {
     try {
         const updatedReservation = await reservationService.updateReservation(req.params.idReservation, req.body);

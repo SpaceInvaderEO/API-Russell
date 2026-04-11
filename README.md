@@ -48,7 +48,7 @@ Avant de commencer, vous aurez besoin de :
 
 ## Routes et Documentation
 L'interface est accessible directement via le navigateur. Si vous souhaitez utiliser l'API REST avec un client comme Postman, vous trouverez tous les endpoints détaillés ici :
-👉 [Documentation de l'API](http://localhost:3000/docs)
+[Documentation de l'API](http://localhost:3000/docs)
 
 Les routes principales sont :
 - `/dashboard` : Vue d'ensemble.
@@ -56,4 +56,4 @@ Les routes principales sont :
 - `/reservations-page` : Interface des réservations.
 - `/users-page` : Interface des utilisateurs.
 
-Merci d'avoir pris le temps de regarder mon projet ! :)
+Merci d'avoir pris le temps de regarder mon projet ! :D
