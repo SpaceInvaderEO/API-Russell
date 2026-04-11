@@ -30,8 +30,9 @@
         <section class="endpoint">
             <h2> Authentification</h2>
             <div style="margin-top: 1.5rem;">
-                <p><span class="method post">POST</span> <code>/login</code></p>
-                <p style="margin: 1rem 0;">Exemple de requête :</p>
+                <p><span class="method post">POST</span> <code>/login</code> - Connexion (retourne un JWT et définit un cookie)</p>
+                <p><span class="method get">GET</span> <code>/logout</code> - Déconnexion (supprime le cookie)</p>
+                <p style="margin: 1rem 0;">Exemple de login :</p>
                 <pre>{
   "email": "admin@russell.com",
   "password": "admin123"
@@ -43,14 +44,14 @@
             <h2> Catways</h2>
             <div style="margin-top: 1.5rem;">
                 <p><span class="method get">GET</span> <code>/catways</code> - Lister tous les catways</p>
-                <p><span class="method get">GET</span> <code>/catways/:id</code> - Voir un catway spécifique</p>
+                <p><span class="method get">GET</span> <code>/catways/:id</code> - Voir un catway spécifique (par son numéro)</p>
                 <p><span class="method post">POST</span> <code>/catways</code> - Créer un catway</p>
                 <pre>{
   "catwayNumber": 42,
   "catwayType": "long",
-  "catwayState": "Neuf"
+  "catwayState": "Bon état"
 }</pre>
-                <p><span class="method put">PUT</span> <code>/catways/:id</code> - Modifier l'état (uniquement)</p>
+                <p><span class="method put">PUT</span> <code>/catways/:id</code> - Modifier l'état d'un catway</p>
                 <p><span class="method delete">DELETE</span> <code>/catways/:id</code> - Supprimer un catway</p>
             </div>
         </section>
@@ -58,15 +59,17 @@
         <section class="endpoint">
             <h2> Réservations</h2>
             <div style="margin-top: 1.5rem;">
-                <p><span class="method get">GET</span> <code>/reservations</code> - Toutes les réservations</p>
+                <p><span class="method get">GET</span> <code>/reservations</code> - Toutes les réservations du port</p>
+                <p><span class="method get">GET</span> <code>/catways/:id/reservations</code> - Réservations pour un catway spécifique</p>
+                <p><span class="method get">GET</span> <code>/catways/:id/reservations/:idReservation</code> - Détails d'une réservation</p>
                 <p><span class="method post">POST</span> <code>/catways/:id/reservations</code> - Créer une réservation</p>
                 <pre>{
-  "clientName": "Alice",
-  "boatName": "Liberté",
+  "clientName": "Jean Dupont",
+  "boatName": "L'Espadon",
   "startDate": "2024-10-01",
   "endDate": "2024-10-15"
 }</pre>
-                <p><span class="method delete">DELETE</span> <code>/catways/:id/reservations/:idReservation</code> - Supprimer</p>
+                <p><span class="method delete">DELETE</span> <code>/catways/:id/reservations/:idReservation</code> - Supprimer une réservation</p>
             </div>
         </section>
 
@@ -75,8 +78,8 @@
             <div style="margin-top: 1.5rem;">
                 <p><span class="method get">GET</span> <code>/users</code> - Liste des administrateurs</p>
                 <p><span class="method post">POST</span> <code>/users</code> - Créer un administrateur</p>
-                <p><span class="method put">PUT</span> <code>/users/:email</code> - Modifier</p>
-                <p><span class="method delete">DELETE</span> <code>/users/:email</code> - Supprimer</p>
+                <p><span class="method put">PUT</span> <code>/users/:email</code> - Modifier un utilisateur</p>
+                <p><span class="method delete">DELETE</span> <code>/users/:email</code> - Supprimer un utilisateur</p>
             </div>
         </section>
     </div>

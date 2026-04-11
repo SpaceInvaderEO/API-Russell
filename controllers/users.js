@@ -22,10 +22,19 @@ exports.getUserByEmail = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required (username, email, password)' });
+    }
+
     try {
         const newUser = await userService.createUser(req.body);
         res.status(201).json({ id: newUser._id, username: newUser.username, email: newUser.email });
     } catch (err) {
+        if (err.message === 'Email already exists') {
+            return res.status(409).json({ message: err.message });
+        }
         res.status(400).json({ message: err.message });
     }
 };

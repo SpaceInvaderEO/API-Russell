@@ -31,10 +31,23 @@ exports.getReservationById = async (req, res) => {
 };
 
 exports.createReservation = async (req, res) => {
+    const { clientName, boatName, startDate, endDate } = req.body;
+ 
+    if (!clientName || !boatName || !startDate || !endDate) {
+        return res.status(400).json({ message: 'All fields are required (clientName, boatName, startDate, endDate)' });
+    }
+ 
+    if (new Date(startDate) >= new Date(endDate)) {
+        return res.status(400).json({ message: 'startDate must be before endDate' });
+    }
+
     try {
         const newReservation = await reservationService.createReservation(req.params.id, req.body);
         res.status(201).json(newReservation);
     } catch (err) {
+        if (err.message === 'Catway not found') {
+            return res.status(404).json({ message: err.message });
+        }
         res.status(400).json({ message: err.message });
     }
 };

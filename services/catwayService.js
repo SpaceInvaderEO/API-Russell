@@ -9,6 +9,11 @@ exports.getCatwayById = async (catwayNumber) => {
 };
 
 exports.createCatway = async (catwayData) => {
+    const existing = await Catway.findOne({ catwayNumber: catwayData.catwayNumber });
+    if (existing) {
+        throw new Error('Catway number already exists');
+    }
+
     const catway = new Catway({
         catwayNumber: catwayData.catwayNumber,
         catwayType: catwayData.catwayType,

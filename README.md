@@ -1,45 +1,59 @@
-# Projet Russell Marina - API de gestion
+# Projet Russell Marina - Gestion du Port
 
-Bonjour ! Voici mon rendu pour le devoir 5 (API REST). Le projet consiste en une API pour gérer les catways et les réservations du port Russell Marina. 
+Bonjour ! Voici mon rendu pour le projet Russell Marina. C'est un outil complet qui permet au personnel du port de gérer les catways (pontons), les réservations des clients et les comptes utilisateurs.
 
-J'ai fait en sorte de bien séparer le code (Models, Services, Controllers) pour que ce soit propre et facile à maintenir.
+## Ce que fait l'application (Fonctionnalités)
+- **Tableau de bord** : Vue globale sur l'état du port et les réservations en cours.
+- **Gestion des Catways** : Ajout, modification de l'état (bon, mauvais, etc.) et suppression.
+- **Gestion des Réservations** : Planning complet lié aux catways.
+- **Gestion des Utilisateurs** : Création et gestion des comptes administrateurs.
+- **Documentation intégrée** : Une page dédiée à l'utilisation technique de l'API.
 
-## Comment lancer le projet chez vous
+## Technologies utilisées
+Pour ce projet, j'ai utilisé :
+- **Node.js** pour l'environnement d'exécution.
+- **Express** pour le serveur web et les routes.
+- **MongoDB Atlas** (avec Mongoose) pour la base de données.
+- **EJS** comme moteur de templates pour l'interface dynamique.
+- **JWT & Cookies** pour sécuriser l'accès au tableau de bord.
 
-### 1. Installation des paquets
-Une fois que vous avez récupéré le dossier, ouvrez un terminal dedans et installez les dépendances :
-```bash
-npm install
-```
+## Prérequis
+Avant de commencer, vous aurez besoin de :
+- **Node.js** (recommandé v16 ou plus) installé sur votre machine.
+- Un terminal.
+- Une connexion internet (pour la base de données MongoDB Atlas).
 
-### 2. Variables d'environnement
-Il vous faudra un fichier `.env` à la racine pour que l'app se connecte à votre base de données. Vous pouvez vous baser sur le fichier `.env.example`.
-En gros, il faut ça :
-- `PORT` : Le port que vous voulez (par défaut 3000)
-- `MONGODB_URI` : L'adresse de votre instance MongoDB (locale ou Atlas)
-- `JWT_SECRET` : Une phrase secrète pour sécuriser les tokens de connexion
+## Installation et Lancement
 
-### 3. Préparer les données (Seed)
-Pour tester l'app facilement, j'ai créé un script qui remplit la base de données avec quelques catways et un compte admin. Lancez-le avec :
-```bash
-node seed.js
-```
-Une fois que c'est fait, vous pourrez vous connecter avec :
-- **Email** : admin@russell.com
-- **Mot de passe** : admin123
+1. **Installer les dépendances** :
+   ```bash
+   npm install
+   ```
 
-### 4. Lancer le serveur
-Pour démarrer l'API :
-```bash
-npm start
-```
-Si vous voulez bosser dessus, il y a aussi `npm run dev` pour avoir le rechargement automatique.
+2. **Configuration (.env)** :
+   Créez un fichier `.env` à la racine (vous pouvez vous aider du `.env.example`). Il doit contenir :
+   - `MONGODB_URI` : Lien de connexion MongoDB.
+   - `JWT_SECRET` : Une clé secrète de votre choix pour les tokens.
+   - `PORT` : 3000 par défaut.
 
----
+3. **Lancement** :
+   ```bash
+   npm start
+   ```
 
-## Utilisation et documentation
-Une fois que le serveur tourne (sur http://localhost:3000 par défaut), vous pouvez voir la liste des points d'entrée de l'API directement ici :
-**http://localhost:3000/docs.html**
+4. **Premier accès** :
+   L'application crée automatiquement un compte de test si vous partez d'une base vide :
+   - URL : `http://localhost:3000`
+   - Identifiants par défaut : `admin@russell.com` / `admin123`
 
-J'y ai listé comment utiliser l'authentification, gérer les utilisateurs, les catways et les réservations. Tout est accessible depuis l'interface HTML dans le dossier public aussi.
+## Routes et Documentation
+L'interface est accessible directement via le navigateur. Si vous souhaitez utiliser l'API REST avec un client comme Postman, vous trouverez tous les endpoints détaillés ici :
+👉 [Documentation de l'API](http://localhost:3000/docs)
 
+Les routes principales sont :
+- `/dashboard` : Vue d'ensemble.
+- `/catways-page` : Interface des catways.
+- `/reservations-page` : Interface des réservations.
+- `/users-page` : Interface des utilisateurs.
+
+Merci d'avoir pris le temps de regarder mon projet ! :)

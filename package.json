@@ -2,7 +2,7 @@
   "name": "5-divuolo_fabien_devoir_5_api_rest",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "node --watch app.js",

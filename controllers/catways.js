@@ -22,10 +22,23 @@ exports.getCatwayById = async (req, res) => {
 };
 
 exports.createCatway = async (req, res) => {
+    const { catwayNumber, catwayType, catwayState } = req.body;
+ 
+    if (!catwayNumber || !catwayType || !catwayState) {
+        return res.status(400).json({ message: 'All fields are required (catwayNumber, catwayType, catwayState)' });
+    }
+ 
+    if (!['long', 'short'].includes(catwayType)) {
+        return res.status(400).json({ message: 'Invalid catwayType (must be long or short)' });
+    }
+
     try {
         const newCatway = await catwayService.createCatway(req.body);
         res.status(201).json(newCatway);
     } catch (err) {
+        if (err.message === 'Catway number already exists') {
+            return res.status(409).json({ message: err.message });
+        }
         res.status(400).json({ message: err.message });
     }
 };

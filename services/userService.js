@@ -10,6 +10,11 @@ exports.getUserByEmail = async (email) => {
 };
 
 exports.createUser = async (userData) => {
+    const existing = await User.findOne({ email: userData.email });
+    if (existing) {
+        throw new Error('Email already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     const user = new User({
         username: userData.username,

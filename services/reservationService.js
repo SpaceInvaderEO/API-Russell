@@ -12,7 +12,14 @@ exports.getReservationById = async (idReservation) => {
     return await Reservation.findById(idReservation);
 };
 
+const Catway = require('../models/Catway');
+
 exports.createReservation = async (catwayNumber, reservationData) => {
+    const catway = await Catway.findOne({ catwayNumber });
+    if (!catway) {
+        throw new Error('Catway not found');
+    }
+
     const reservation = new Reservation({
         catwayNumber: catwayNumber,
         clientName: reservationData.clientName,
