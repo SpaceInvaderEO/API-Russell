@@ -10,7 +10,7 @@
 <body>
     <nav class="nav">
         <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
-            <a href="dashboard.html" class="logo">⚓ Russell Marina</a>
+            <a href="/dashboard" class="logo">⚓ Russell Marina</a>
             <div style="display: flex; align-items: center; gap: 1.5rem;">
                 <span id="userDisplay" style="font-size: 0.875rem; font-weight: 600;"></span>
                 <span id="dateDisplay" style="font-size: 0.875rem; color: var(--secondary);"></span>
@@ -22,11 +22,11 @@
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="navbar-links" style="flex-direction: column;">
-                <a href="dashboard.html" class="nav-link" style="color: var(--primary);">Tableau de bord</a>
-                <a href="catways.html" class="nav-link">Gestion des Catways</a>
-                <a href="reservations.html" class="nav-link">Réservations</a>
-                <a href="users.html" class="nav-link">Utilisateurs</a>
-                <a href="docs.html" class="nav-link">Documentation</a>
+                <a href="/dashboard" class="nav-link" style="color: var(--primary);">Tableau de bord</a>
+                <a href="/catways-page" class="nav-link">Gestion des Catways</a>
+                <a href="/reservations-page" class="nav-link">Réservations</a>
+                <a href="/users-page" class="nav-link">Utilisateurs</a>
+                <a href="/docs" class="nav-link">Documentation</a>
             </div>
         </aside>
 
@@ -74,10 +74,11 @@
         document.getElementById('userDisplay').textContent = userData.username;
         document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/logout');
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = 'index.html';
+            window.location.href = '/';
         });
 
         async function fetchData() {

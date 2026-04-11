@@ -10,7 +10,7 @@
 <body>
     <nav class="nav">
         <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
-            <a href="dashboard.html" class="logo">⚓ Russell Marina</a>
+            <a href="/dashboard" class="logo">⚓ Russell Marina</a>
             <button id="logoutBtn" class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto; font-size: 0.75rem;">Déconnexion</button>
         </div>
     </nav>
@@ -18,11 +18,11 @@
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="navbar-links" style="flex-direction: column;">
-                <a href="dashboard.html" class="nav-link">Tableau de bord</a>
-                <a href="catways.html" class="nav-link" style="color: var(--primary);">Gestion des Catways</a>
-                <a href="reservations.html" class="nav-link">Réservations</a>
-                <a href="users.html" class="nav-link">Utilisateurs</a>
-                <a href="docs.html" class="nav-link">Documentation</a>
+                <a href="/dashboard" class="nav-link">Tableau de bord</a>
+                <a href="/catways-page" class="nav-link" style="color: var(--primary);">Gestion des Catways</a>
+                <a href="/reservations-page" class="nav-link">Réservations</a>
+                <a href="/users-page" class="nav-link">Utilisateurs</a>
+                <a href="/docs" class="nav-link">Documentation</a>
             </div>
         </aside>
 
@@ -79,9 +79,10 @@
         const token = localStorage.getItem('token');
         if (!token) window.location.href = 'index.html';
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/logout');
             localStorage.removeItem('token');
-            window.location.href = 'index.html';
+            window.location.href = '/';
         });
 
         async function fetchCatways() {

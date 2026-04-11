@@ -30,12 +30,20 @@
             <p id="errorMessage" style="color: var(--danger); margin-top: 1rem; font-size: 0.875rem; display: none;"></p>
             
             <div style="margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
-                <a href="docs.html" class="nav-link" style="font-size: 0.75rem;">Documentation API</a>
+                <a href="/docs" class="nav-link" style="font-size: 0.75rem;">Documentation API</a>
             </div>
         </div>
     </div>
 
     <script>
+        // Check for unauthorized error in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error') === 'unauthorized') {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = 'Session expirée ou accès non autorisé. Veuillez vous connecter.';
+            errorEl.style.display = 'block';
+        }
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -54,7 +62,7 @@
                 if (response.ok) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data));
-                    window.location.href = 'dashboard.html';
+                    window.location.href = '/dashboard';
                 } else {
                     errorEl.textContent = data.message || 'Erreur de connexion';
                     errorEl.style.display = 'block';
