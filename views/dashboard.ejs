@@ -1,34 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russell Marina | Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <%- include('partials/head', { title: 'Dashboard' }) %>
 </head>
 <body>
-    <nav class="nav">
-        <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
-            <a href="/dashboard" class="logo">⚓ Russell Marina</a>
-            <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <span id="userDisplay" style="font-size: 0.875rem; font-weight: 600;"></span>
-                <span id="dateDisplay" style="font-size: 0.875rem; color: var(--secondary);"></span>
-                <button id="logoutBtn" class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto; font-size: 0.75rem;">Déconnexion</button>
-            </div>
-        </div>
-    </nav>
+    <%- include('partials/nav') %>
 
     <div class="dashboard-layout">
-        <aside class="sidebar">
-            <div class="navbar-links" style="flex-direction: column;">
-                <a href="/dashboard" class="nav-link" style="color: var(--primary);">Tableau de bord</a>
-                <a href="/catways-page" class="nav-link">Gestion des Catways</a>
-                <a href="/reservations-page" class="nav-link">Réservations</a>
-                <a href="/users-page" class="nav-link">Utilisateurs</a>
-                <a href="/docs" class="nav-link">Documentation</a>
-            </div>
-        </aside>
+        <%- include('partials/sidebar', { currentPage: 'dashboard' }) %>
 
         <main class="main-content">
             <h2 style="margin-bottom: 2rem;">Vue d'ensemble</h2>
@@ -69,9 +48,12 @@
         const token = localStorage.getItem('token');
         const userData = JSON.parse(localStorage.getItem('user'));
 
-        if (!token) window.location.href = 'index.html';
+        if (!token) window.location.href = '/?error=unauthorized';
 
-        document.getElementById('userDisplay').textContent = userData.username;
+        if (userData) {
+            document.getElementById('userDisplay').textContent = userData.username;
+        }
+        
         document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
@@ -88,6 +70,7 @@
                     fetch('/reservations', { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
 
+                if (catwaysRes.status === 401) window.location.href = '/?error=unauthorized';
                 if (!catwaysRes.ok || !reservationsRes.ok) throw new Error('Failed to fetch');
 
                 const catways = await catwaysRes.json();

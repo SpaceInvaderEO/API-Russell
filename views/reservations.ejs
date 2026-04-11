@@ -1,30 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russell Marina | Réservations</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <%- include('partials/head', { title: 'Réservations' }) %>
 </head>
 <body>
-    <nav class="nav">
-        <div class="container" style="display: flex; justify-content: space-between; width: 100%;">
-            <a href="/dashboard" class="logo">⚓ Russell Marina</a>
-            <button id="logoutBtn" class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto; font-size: 0.75rem;">Déconnexion</button>
-        </div>
-    </nav>
+    <%- include('partials/nav') %>
 
     <div class="dashboard-layout">
-        <aside class="sidebar">
-            <div class="navbar-links" style="flex-direction: column;">
-                <a href="/dashboard" class="nav-link">Tableau de bord</a>
-                <a href="/catways-page" class="nav-link">Gestion des Catways</a>
-                <a href="/reservations-page" class="nav-link" style="color: var(--primary);">Réservations</a>
-                <a href="/users-page" class="nav-link">Utilisateurs</a>
-                <a href="/docs" class="nav-link">Documentation</a>
-            </div>
-        </aside>
+        <%- include('partials/sidebar', { currentPage: 'reservations' }) %>
 
         <main class="main-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
@@ -86,16 +69,23 @@
 
     <script>
         const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'index.html';
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token) window.location.href = '/?error=unauthorized';
+
+        if (userData) {
+            document.getElementById('userDisplay').textContent = userData.username;
+        }
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await fetch('/logout');
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
             window.location.href = '/';
         });
 
         async function fetchReservations() {
             const res = await fetch('/reservations', { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.status === 401) window.location.href = '/?error=unauthorized';
             const data = await res.json();
             const tbody = document.querySelector('#resTable tbody');
             tbody.innerHTML = data.map(r => `

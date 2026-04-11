@@ -13,6 +13,9 @@ const auth = require('./middlewares/auth');
 
 const app = express();
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -25,19 +28,19 @@ app.use('/catways', catwaysRoutes);
 app.use('/users', usersRoutes);
 
 app.get('/dashboard', auth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+    res.render('dashboard');
 });
 app.get('/catways-page', auth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'catways.html'));
+    res.render('catways');
 });
 app.get('/reservations-page', auth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'reservations.html'));
+    res.render('reservations');
 });
 app.get('/users-page', auth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'users.html'));
+    res.render('users');
 });
 app.get('/docs', auth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'docs.html'));
+    res.render('docs');
 });
 
 const PORT = process.env.PORT || 3000;

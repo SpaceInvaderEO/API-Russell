@@ -1,0 +1,9 @@
+<aside class="sidebar">
+    <div class="navbar-links" style="flex-direction: column;">
+        <a href="/dashboard" class="nav-link <%= currentPage === 'dashboard' ? 'active' : '' %>" <%= currentPage === 'dashboard' ? 'style="color: var(--primary);"' : '' %>>Tableau de bord</a>
+        <a href="/catways-page" class="nav-link <%= currentPage === 'catways' ? 'active' : '' %>" <%= currentPage === 'catways' ? 'style="color: var(--primary);"' : '' %>>Gestion des Catways</a>
+        <a href="/reservations-page" class="nav-link <%= currentPage === 'reservations' ? 'active' : '' %>" <%= currentPage === 'reservations' ? 'style="color: var(--primary);"' : '' %>>Réservations</a>
+        <a href="/users-page" class="nav-link <%= currentPage === 'users' ? 'active' : '' %>" <%= currentPage === 'users' ? 'style="color: var(--primary);"' : '' %>>Utilisateurs</a>
+        <a href="/docs" class="nav-link <%= currentPage === 'docs' ? 'active' : '' %>" <%= currentPage === 'docs' ? 'style="color: var(--primary);"' : '' %>>Documentation</a>
+    </div>
+</aside>

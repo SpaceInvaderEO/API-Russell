@@ -36,7 +36,6 @@
     </div>
 
     <script>
-        // Check for unauthorized error in URL
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('error') === 'unauthorized') {
             const errorEl = document.getElementById('errorMessage');
