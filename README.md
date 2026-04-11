@@ -43,7 +43,3 @@ Une fois que le serveur tourne (sur http://localhost:3000 par défaut), vous pou
 
 J'y ai listé comment utiliser l'authentification, gérer les utilisateurs, les catways et les réservations. Tout est accessible depuis l'interface HTML dans le dossier public aussi.
 
-## Stack technique
-- Node.js / Express
-- MongoDB avec Mongoose
-- Authentification par JWT et hachage Bcrypt

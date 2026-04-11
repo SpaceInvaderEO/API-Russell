@@ -15,21 +15,44 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const reservationsController = require('./controllers/reservations');
-const auth = require('./middlewares/auth');
-
 app.use('/', authRoutes);
+app.use('/reservations', reservationsRoutes);
 app.use('/catways', catwaysRoutes);
-app.use('/catways/:id/reservations', reservationsRoutes);
-app.use('/reservations', auth, reservationsController.getAllReservations);
 app.use('/users', usersRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => {
+const Catway = require('./models/Catway');
+const User = require('./models/User');
+const bcrypt = require('bcrypt');
+const catwaysData = require('./Fichiers/catways.json');
+
+async function startServer() {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        
+        const catwayCount = await Catway.countDocuments();
+        if (catwayCount === 0) {
+            await Catway.insertMany(catwaysData);
+            
+            const adminExists = await User.findOne({ email: 'admin@russell.com' });
+            if (!adminExists) {
+                const hashedPassword = await bcrypt.hash('admin123', 10);
+                await User.create({
+                    username: 'admin',
+                    email: 'admin@russell.com',
+                    password: hashedPassword
+                });
+            }
+        }
+
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
-    })
-    .catch(err => console.error(err));
+    } catch (err) {
+        console.error('Startup error:', err);
+        process.exit(1);
+    }
+}
+
+startServer();
